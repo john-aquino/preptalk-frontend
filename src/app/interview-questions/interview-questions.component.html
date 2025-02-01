@@ -1,0 +1,41 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-purple-600 p-4">
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg p-8">
+      <h2 class="text-3xl font-bold text-blue-600 mb-6 text-center border-b pb-4">Generated Interview Questions</h2>
+      
+      <div class="mb-6">
+        <p class="text-gray-800 text-lg"><span class="font-semibold">Prompt:</span> {{ prompt }}</p>
+      </div>
+      
+      <div *ngIf="isLoading" class="text-center py-6">
+        <!-- Loading spinner -->
+        <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        <span class="text-blue-700 mt-4 inline-block">Generating questions...</span>
+      </div>
+      
+      <div *ngIf="error && !isLoading" class="mb-6 text-center">
+        <p class="text-red-600 text-lg">{{ error }}</p>
+        <button (click)="retry()"
+          class="mt-4 bg-red-500 text-white px-5 py-2 rounded hover:bg-red-600 transition duration-300">
+          Retry
+        </button>
+      </div>
+      
+      <div *ngIf="!isLoading && !error" class="mb-4">
+        <button (click)="toggleAnswers()"
+          class="mb-4 w-full bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition duration-300">
+          {{ answersVisible ? 'Hide Answers' : 'Show Answers' }}
+        </button>
+        <div class="border border-gray-300 p-6 rounded-xl bg-gray-50">
+          <p *ngIf="answersVisible; else hiddenBlock" class="text-gray-800 text-base leading-relaxed">
+            {{ questions }}
+          </p>
+          <ng-template #hiddenBlock>
+            <p class="text-gray-600 italic">Answers are hidden. Click the button above to reveal them.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -30,22 +30,15 @@
     
     <!-- Display questions when loaded -->
     <div *ngIf="!isLoading && !error" class="mb-4">
-      <button (click)="toggleAnswers()"
-        class="mb-4 w-full bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition duration-300">
-        {{ answersVisible ? 'Hide Answers' : 'Show Answers' }}
-      </button>
-      <div class="border border-gray-300 p-6 rounded-xl bg-gray-50">
-        <ng-container *ngIf="answersVisible; else hiddenBlock">
-          <div *ngFor="let qa of questions" class="mb-4">
-            <p class="font-semibold text-gray-800">{{ qa.question }}</p>
-            <p class="text-gray-800">{{ qa.answer }}</p>
-          </div>
-        </ng-container>
-        <ng-template #hiddenBlock>
-          <p class="text-gray-600 italic">
-            Answers are hidden. Click the button above to reveal them.
-          </p>
-        </ng-template>
+      <div *ngFor="let qa of questions" class="mb-6 border-b pb-4">
+        <p class="font-semibold text-gray-800 text-lg">{{ qa.question }}</p>
+        <button (click)="qa.visible = !qa.visible"
+          class="mt-2 text-sm text-blue-600 underline">
+          {{ qa.visible ? 'Hide Answer' : 'Show Answer' }}
+        </button>
+        <div *ngIf="qa.visible" class="mt-2">
+          <p class="text-gray-800">{{ qa.answer }}</p>
+        </div>
       </div>
     </div>
   </div>

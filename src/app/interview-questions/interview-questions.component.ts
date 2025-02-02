@@ -8,6 +8,7 @@ import { InterviewService } from '../interview.service';
 interface QuestionAnswer {
   question: string;
   answer: string;
+  visible?: boolean;  // added property to track individual answer visibility
 }
 
 interface InterviewQuestionsResponse {
@@ -24,12 +25,11 @@ interface InterviewQuestionsResponse {
 export class InterviewQuestionsComponent implements OnInit, OnDestroy {
   prompt: string = '';
   questions: QuestionAnswer[] = [];
-  answersVisible: boolean = false;
   isLoading: boolean = true;
   error: string = '';
   loadingMessage: string = '';
 
-  // An array of messages to display while loading.
+  // Loading messages to display while waiting for API response.
   private loadingMessages: string[] = [
     "Forming the best interview...",
     "Gathering insights...",
@@ -46,7 +46,6 @@ export class InterviewQuestionsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to the prompt from the service.
     this.interviewService.prompt$.subscribe((p) => {
       this.prompt = p;
       if (!this.prompt) {
@@ -77,8 +76,8 @@ export class InterviewQuestionsComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (data) => {
         if (data.questions && data.questions.length > 0) {
-          this.questions = data.questions;
-          // Optionally, you can store the questions as a string in the InterviewService:
+          // Initialize each question's visible property to false.
+          this.questions = data.questions.map(qa => ({ ...qa, visible: false }));
           this.interviewService.setQuestions(JSON.stringify(data.questions));
         } else {
           this.error = 'No questions were generated. Please try again.';
@@ -97,10 +96,6 @@ export class InterviewQuestionsComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
-
-  toggleAnswers(): void {
-    this.answersVisible = !this.answersVisible;
   }
 
   retry(): void {
